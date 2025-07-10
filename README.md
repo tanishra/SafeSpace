@@ -16,7 +16,6 @@
 - [Uniqueness](#uniqueness)
 - [Getting Started](#getting-started)
 - [Contributions](#contributions)
-- [License](#license)
 
 ---
 

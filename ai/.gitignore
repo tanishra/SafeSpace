@@ -8,4 +8,5 @@ nlp_engine/__pycache__
 nlp_engine/bhadresh-bert-emotion-model
 nlp_engine/bert-large-ner
 nlp_engine/__init__.py
+threat_detection/threat_model
 venv

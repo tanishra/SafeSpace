@@ -1,0 +1,11 @@
+.env
+.DS_Store
+alert_system/__pycache__
+data_fetcher/__pycache__
+geo_matcher/__pycache__
+location_tracker/__pycache__
+nlp_engine/__pycache__
+nlp_engine/bhadresh-bert-emotion-model
+nlp_engine/bert-large-ner
+nlp_engine/__init__
+venv

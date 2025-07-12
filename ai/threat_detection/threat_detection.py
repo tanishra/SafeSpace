@@ -25,9 +25,55 @@ def get_threat_level(label: str, score_percent: float) -> str:
     label = label.upper().strip()
 
     # Define threat-related labels
-    high_threat_labels = {'ANGER', 'VIOLENCE', 'HATE', 'AGGRESSION'}
-    medium_threat_labels = {'FEAR', 'ANXIETY'}
-    low_threat_labels = {'SADNESS', 'WORRY'}
+    high_threat_labels = {
+    # Violent Behavior
+    'VIOLENCE', 'MURDER', 'RAPE', 'ASSAULT', 'FIGHT', 'AGGRESSION', 'ANGER', 'HOMICIDE',
+    
+    # Criminal Threats
+    'TERRORISM', 'KIDNAPPING', 'RIOT', 'ROBBERY', 'LOOTING', 'ARSON',
+
+    # Disasters (Man-made/Natural)
+    'FIRE', 'EXPLOSION', 'EARTHQUAKE', 'FLOOD', 'BUILDING_COLLAPSE', 'TSUNAMI', 'TORNADO',
+    'HURRICANE', 'LANDSLIDE', 'NUCLEAR_ACCIDENT', 'CHEMICAL_SPILL',
+
+    # Transportation Incidents
+    'ACCIDENT', 'CAR_CRASH', 'PLANE_CRASH', 'TRAIN_DERAILMENT', 'BOAT_SINKING',
+
+    # Weapons-related
+    'GUNSHOT', 'SHOOTING', 'STABBING', 'WEAPON_THREAT', 'BOMB_THREAT',
+
+    # Social Threats
+    'HATE', 'LYNCHING', 'GENOCIDE', 'RACISM', 'EXTREMISM'
+    }
+
+    medium_threat_labels = {
+    # Emotional States
+    'FEAR', 'ANXIETY', 'PANIC', 'PARANOIA', 'TENSION',
+
+    # Suspicious Behavior
+    'SUSPICIOUS_ACTIVITY', 'TRESPASSING', 'THREATS', 'HARASSMENT', 'ESCALATION',
+
+    # Environmental Warning Signs
+    'SMOKE', 'STRUCTURAL_DAMAGE', 'LEAKAGE', 'OVERFLOW',
+
+    # Social/Group Indicators
+    'PROTEST', 'UNREST', 'CROWD_BUILDUP', 'VERBAL_ABUSE'
+    }
+
+    low_threat_labels = {
+    # Emotional States
+    'SADNESS', 'WORRY', 'DISTRESS', 'DESPAIR', 'CONFUSION', 'ISOLATION', 'FRUSTRATION',
+
+    # Environmental Cues
+    'ODOR', 'VIBRATION', 'MINOR_DAMAGE', 'STRANGE_NOISES',
+
+    # Social or Health Indicators
+    'FATIGUE', 'ILLNESS', 'WITHDRAWAL', 'DEPRESSION', 'CRYING', 'YELLING',
+
+    # Behavioral Cues
+    'AGITATION', 'RESTLESSNESS', 'LOSS_OF_CONTROL'
+    }
+
 
     if label in high_threat_labels:
         if score_percent >= 85:

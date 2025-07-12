@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any, List, Tuple, Union
+from typing import Dict, Any
 
 import sys
 import os
@@ -14,10 +14,8 @@ from ai.geo_matcher.location_matcher import is_threat_near_user
 from ai.location_tracker.get_threat_coordinates import get_coordinates
 from app.services.geo_utils import fetch_user_location
 
-
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
-
 
 def analyze_news_by_location(location: str, max_articles: int = 20, threat_distance_km: int = 10) -> Dict[str, Any]:
     """
@@ -55,10 +53,7 @@ def analyze_news_by_location(location: str, max_articles: int = 20, threat_dista
 
     for article in articles:
         title = article.get("title", "")
-        description = article.get("description", "")
-        combined_text = f"{title} {description}"
-
-        cleaned_text = clean_text(combined_text)
+        cleaned_text = clean_text(title)
         places = extract_places(cleaned_text)
 
         article_threat_flag = False
@@ -77,27 +72,29 @@ def analyze_news_by_location(location: str, max_articles: int = 20, threat_dista
                 user_coords, threat_coords, cleaned_text, max_km=threat_distance_km
             )
 
+            distance_km = round(distance_or_reason, 2) if isinstance(distance_or_reason, (int, float)) else None
+
             if near:
                 article_threat_flag = True
                 threat_label = threat_class
                 threat_score = confidence
-                distance_km = round(distance_or_reason, 2) if isinstance(distance_or_reason, (int, float)) else None
-                threat_reason = "Threat is within range."
+                threat_reason = f"Threat detected within {distance_km} km range."
                 break
             else:
-                # When not near, distance_or_reason explains why
                 threat_label = threat_class
                 threat_score = confidence
-                threat_reason = distance_or_reason
-                if isinstance(distance_or_reason, (int, float)):
-                    distance_km = round(distance_or_reason, 2)
+                if threat_label.lower() == "no threat":
+                    threat_reason = "No threat detected."
+                elif distance_km is not None:
+                    threat_reason = f"Threat too far: {distance_km} km away."
+                else:
+                    threat_reason = str(distance_or_reason)
 
         if article_threat_flag:
             threat_detected = True
 
         processed_articles.append({
             "title": title,
-            "description": description,
             "cleaned_text": cleaned_text,
             "entities": places,
             "threat_label": threat_label,
@@ -117,16 +114,3 @@ def analyze_news_by_location(location: str, max_articles: int = 20, threat_dista
     }
 
 
-if __name__ == "__main__":
-    result = analyze_news_by_location("Delhi")
-
-    print("\n🚨 Threat Detected:", result["threat_detected"])
-    print("\n📄 Analyzed Articles:")
-    for article in result["articles"]:
-        print("\n-------------------------------------")
-        print(f"Title: {article['title']}")
-        print(f"Label: {article['threat_label']}")
-        print(f"Confidence: {article['threat_score']}%")
-        print(f"Entities: {article['entities']}")
-        print(f"Distance: {article['distance_km']} km")
-        print(f"Reason: {article['threat_reason']}")

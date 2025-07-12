@@ -78,4 +78,3 @@ def extract_places(text: str) -> List[str]:
         logger.error(f"Error extracting places: {e}")
         raise RuntimeError(f"Error extracting places: {e}") from e
 
-

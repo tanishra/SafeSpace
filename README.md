@@ -96,8 +96,10 @@
 
 ## Screenshots
 
-<img src="images/screenshot.jpeg" alt="Screenshot" width="300"/>
-<img src="images/screenshot2.jpeg" alt="Screenshot" width="300"/>
+<p align="center">
+  <img src="images/screenshot.jpeg" alt="Image 1" width="200"/>
+  <img src="images/screenshot2.jpeg" alt="Image 2" width="200"/>
+</p>
 
 
 ## 🤝 Contributions

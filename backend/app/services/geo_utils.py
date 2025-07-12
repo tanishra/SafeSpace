@@ -3,11 +3,7 @@ import os
 import logging
 from typing import Optional, Tuple, Dict
 from dotenv import load_dotenv
-
-# Update path to match your project structure
 sys.path.append('/Users/tanishrajput/Desktop/SafeSpace')
-
-# Import the updated get_location function
 from ai.location_tracker.get_user_coordinates import get_location
 
 # Load environment variables

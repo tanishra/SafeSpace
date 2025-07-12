@@ -19,12 +19,10 @@ def is_threat_near_user(user_coords, threat_coords, threat_text, max_km=10):
     confidence = result['score_percent']
 
     if distance > max_km:
-        return False, confidence, threat_class,"Threat is too far away - {:.2f} km".format(distance) 
-    
+        return False, confidence, threat_class, distance 
     if threat_class == "No Threat":
         return False, confidence, threat_class, distance
 
     # Threat is valid and within range
     distance = round(distance, 2)  
     return True, confidence, threat_class, distance
-    

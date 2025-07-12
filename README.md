@@ -94,6 +94,12 @@
 
 ---
 
+## Screenshots
+
+![Page 1](images/screenshot.jpeg)
+![Page 2](images/screenshot2.jpeg)
+
+
 ## 🤝 Contributions
 
 We welcome contributions of all types!

@@ -3,71 +3,69 @@ import requests
 from dotenv import load_dotenv
 import os
 
+# Load API key from .env file
 load_dotenv()
+DEFAULT_API_KEY = os.getenv('GOOGLE_API_KEY')
 
-api_key = os.getenv('GOOGLE_API_KEY')
 
-
-def get_current_location(api_key):
+def get_location(place_name=None, api_key=DEFAULT_API_KEY):
     """
-    Fetch the user's current location using IP and Google Maps Reverse Geocoding API.
-    
+    Get location details from either a place name or current IP-based location.
+
     Args:
-        api_key (str): Your Google Maps API key.
-    
+        place_name (str, optional): Name of the city/place. If None, use IP location.
+        api_key (str): Google Maps API key (default loaded from environment).
+
     Returns:
         dict: Location details including latitude, longitude, city, state, country, and postal code.
     """
-    # Step 1: Get current latitude and longitude using IP-based geolocation
-    g = geocoder.ip('me')
-    latlng = g.latlng
 
-    if latlng:
-        latitude, longitude = latlng
-        print(f"Latitude: {latitude}, Longitude: {longitude}")
+    def extract_components(components):
+        def get_component(component_type):
+            for component in components:
+                if component_type in component['types']:
+                    return component['long_name']
+            return 'Unknown'
 
-        # Step 2: Reverse geocode using Google Maps API
-        geocode_url = (
-            f"https://maps.googleapis.com/maps/api/geocode/json?"
-            f"latlng={latitude},{longitude}&key={api_key}"
-        )
-        response = requests.get(geocode_url)
-        data = response.json()
+        return {
+            'city': get_component('locality'),
+            'state': get_component('administrative_area_level_1'),
+            'country': get_component('country'),
+            'postal_code': get_component('postal_code'),
+        }
 
-        if data['status'] == 'OK':
-            results = data.get('results', [])
-            if results:
-                address_components = results[0].get('address_components', [])
-
-                # Helper function to extract component by type
-                def get_component(components, component_type):
-                    for component in components:
-                        if component_type in component['types']:
-                            return component['long_name']
-                    return 'Unknown'
-
-                city = get_component(address_components, 'locality')
-                state = get_component(address_components, 'administrative_area_level_1')
-                country = get_component(address_components, 'country')
-                postal_code = get_component(address_components, 'postal_code')
-
-                # Create the result dictionary
-                location_info = {
-                    'latitude': latitude,
-                    'longitude': longitude,
-                    'city': city,
-                    'state': state,
-                    'country': country,
-                    'postal_code': postal_code
-                }
-
-                return location_info
-            else:
-                print("No results found from reverse geocoding.")
-        else:
-            print("Error from Google API:", data['status'])
+    if place_name:
+        # Forward geocoding
+        geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={place_name}&key={api_key}"
     else:
-        print("Unable to determine location from IP.")
+        # Get coordinates from IP
+        g = geocoder.ip('me')
+        if not g.latlng:
+            print("Unable to determine location from IP.")
+            return None
+        latitude, longitude = g.latlng
+        geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={api_key}"
 
-    # Return None if anything fails
+    response = requests.get(geocode_url)
+    data = response.json()
+
+    if data['status'] == 'OK':
+        results = data.get('results', [])
+        if results:
+            location = results[0]['geometry']['location']
+            components = results[0].get('address_components', [])
+            extracted = extract_components(components)
+
+            return {
+                'latitude': location['lat'],
+                'longitude': location['lng'],
+                **extracted
+            }
+        else:
+            print("No results found from geocoding.")
+    else:
+        print("Error from Google API:", data['status'])
+
     return None
+
+

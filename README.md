@@ -96,8 +96,8 @@
 
 ## Screenshots
 
-![Page 1](images/screenshot.jpeg)
-![Page 2](images/screenshot2.jpeg)
+<img src="images/screenshot.png" alt="Screenshot" width="300"/>
+<img src="images/screenshot2.png" alt="Screenshot" width="300"/>
 
 
 ## 🤝 Contributions

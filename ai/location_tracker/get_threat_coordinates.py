@@ -55,4 +55,3 @@ def get_coordinates(city_name: str, retries: int = 3, timeout: int = 5) -> Optio
                 return None
 
     return None
-

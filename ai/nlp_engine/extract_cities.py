@@ -32,7 +32,7 @@ def load_ner_pipeline(model_path: str = MODEL_PATH) -> pipeline:
     """
     global _ner_pipeline
     if _ner_pipeline is not None:
-        return _ner_pipeline  # Return already loaded pipeline
+        return _ner_pipeline  # It will return the already loaded pipeline
 
     try:
         logger.info(f"Loading model and tokenizer from: {model_path}")
